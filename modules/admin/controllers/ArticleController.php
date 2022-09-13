@@ -4,9 +4,11 @@ namespace app\modules\admin\controllers;
 
 use app\models\Article;
 use app\models\ArticleSearch;
+use app\models\ImageUpload;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ArticleController implements the CRUD actions for Article model.
@@ -60,6 +62,9 @@ class ArticleController extends Controller
         ]);
     }
 
+
+    // из формы все значения поступают в этот action
+    // все поля из таблицы Article в БД становятся свойствами объекта класса Article
     /**
      * Creates a new Article model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -70,7 +75,11 @@ class ArticleController extends Controller
         $model = new Article();
 
         if ($this->request->isPost) {
+            // $model->load - автоматически подставлять значения из формы в соответствующие свойства
+            // чтобы вручную не прописывать для каждого свойства, например: $model-title = $_POST['Article']['title']
+            // $model-save() - сохранение в базу (перед сохранением мы попадаем в метод rules класса Article для валидации полученных данных)
             if ($model->load($this->request->post()) && $model->save()) {
+                // если успешно загрузились и сохранились все данные, то перенаправляем на страницу с созданной статьёй
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -130,5 +139,32 @@ class ArticleController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+
+    /**
+     * @throws NotFoundHttpException
+     */
+    public function actionSetImage($id)
+    {
+        $model = new ImageUpload;
+
+        if ($this->request->isPost) {
+            // в $article записывается статья из БД, как объект Article методом findModel по id статьи
+            $article = $this->findModel($id);
+
+            // UploadedFile - встроенный в yii класс, представляет информацию для загруженного файла
+            // getInstance - статический метод который возвращает файл
+            $file = UploadedFile::getInstance($model, 'image');
+
+            // $model->uploadFile($file) возвратит название картинки
+            // saveImage сохранит в БД название картинки в поле image
+            // и передадим
+            if (!is_null($file) && $article->saveImage($model->uploadFile($file, $article->image))) {
+                return $this->redirect(['view', 'id' => $article->id]);
+            }
+        }
+
+        return $this->render('image', ['model' => $model]);
     }
 }
