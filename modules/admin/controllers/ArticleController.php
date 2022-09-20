@@ -4,7 +4,9 @@ namespace app\modules\admin\controllers;
 
 use app\models\Article;
 use app\models\ArticleSearch;
+use app\models\Category;
 use app\models\ImageUpload;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -166,5 +168,25 @@ class ArticleController extends Controller
         }
 
         return $this->render('image', ['model' => $model]);
+    }
+
+    public function actionSetCategory($id)
+    {
+        $article = $this->findModel($id); // цепляем нашу статью
+        $selectedCategory = $article->category->id; // готовим значение для формы
+        $categories = ArrayHelper::map(Category::find()->all(), 'id', 'title'); // выбираем текущий id (тут готовим список)
+
+        if($this->request->isPost) {
+            $category = $this->request->post('category');         // ловится выбранное значение в dropdown по названию category
+            if ($article->saveCategory($category)) {                    // передаём методу saveCategory который возвращает true если связь установлена
+                return $this->redirect(['view', 'id' => $article->id]); // если связь установлена редиректим на вью статьи
+            }
+        }
+
+        return $this->render('category', [ // все данные передаём в вид
+            'article' => $article,
+            'selectedCategory' => $selectedCategory,
+            'categories' => $categories
+        ]);
     }
 }
