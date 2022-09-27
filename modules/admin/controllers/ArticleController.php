@@ -6,6 +6,8 @@ use app\models\Article;
 use app\models\ArticleSearch;
 use app\models\Category;
 use app\models\ImageUpload;
+use app\models\Tag;
+use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -65,8 +67,8 @@ class ArticleController extends Controller
     }
 
 
-    // из формы все значения поступают в этот action
-    // все поля из таблицы Article в БД становятся свойствами объекта класса Article
+   
+   
     /**
      * Creates a new Article model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -76,12 +78,12 @@ class ArticleController extends Controller
     {
         $model = new Article();
 
-        if ($this->request->isPost) {
-            // $model->load - автоматически подставлять значения из формы в соответствующие свойства
-            // чтобы вручную не прописывать для каждого свойства, например: $model-title = $_POST['Article']['title']
-            // $model-save() - сохранение в базу (перед сохранением мы попадаем в метод rules класса Article для валидации полученных данных)
+        if (Yii::$app->request->isPost) {
+           
+           
+           
             if ($model->load($this->request->post()) && $model->save()) {
-                // если успешно загрузились и сохранились все данные, то перенаправляем на страницу с созданной статьёй
+               
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -152,17 +154,10 @@ class ArticleController extends Controller
         $model = new ImageUpload;
 
         if ($this->request->isPost) {
-            // в $article записывается статья из БД, как объект Article методом findModel по id статьи
             $article = $this->findModel($id);
-
-            // UploadedFile - встроенный в yii класс, представляет информацию для загруженного файла
-            // getInstance - статический метод который возвращает файл
             $file = UploadedFile::getInstance($model, 'image');
 
-            // $model->uploadFile($file) возвратит название картинки
-            // saveImage сохранит в БД название картинки в поле image
-            // и передадим
-            if (!is_null($file) && $article->saveImage($model->uploadFile($file, $article->image))) {
+            if ($file !== null && $article->saveImage($model->uploadFile($file, $article->image))) {
                 return $this->redirect(['view', 'id' => $article->id]);
             }
         }
@@ -172,21 +167,43 @@ class ArticleController extends Controller
 
     public function actionSetCategory($id)
     {
-        $article = $this->findModel($id); // цепляем нашу статью
-        $selectedCategory = $article->category->id; // готовим значение для формы
-        $categories = ArrayHelper::map(Category::find()->all(), 'id', 'title'); // выбираем текущий id (тут готовим список)
+        $article = $this->findModel($id);
+        $selectedCategoryId = !empty($article->category->id) ? $article->category->id : null;
+        $categories = ArrayHelper::map(Category::find()->all(), 'id', 'title');
 
-        if($this->request->isPost) {
-            $category = $this->request->post('category');         // ловится выбранное значение в dropdown по названию category
-            if ($article->saveCategory($category)) {                    // передаём методу saveCategory который возвращает true если связь установлена
-                return $this->redirect(['view', 'id' => $article->id]); // если связь установлена редиректим на вью статьи
+        if ($this->request->isPost) {
+            $category = $this->request->post('category');         
+            if ($article->saveCategory($category)) {                    
+                return $this->redirect(['view', 'id' => $article->id]);
             }
         }
 
-        return $this->render('category', [ // все данные передаём в вид
+        return $this->render('category', [
             'article' => $article,
-            'selectedCategory' => $selectedCategory,
+            'selectedCategory' => $selectedCategoryId,
             'categories' => $categories
+        ]);
+    }
+
+    /**
+     * @throws NotFoundHttpException
+     */
+    public function actionSetTags($id)
+    {
+        $article = $this->findModel($id);
+        $selectedTags = $article->getSelectedTags();
+
+        if ($this->request->isPost) {
+            $tags = $this->request->post('tags');
+            $article->saveTags($tags);
+            return $this->redirect(['view', 'id' => $article->id]);
+        }
+
+        $tags = ArrayHelper::map(Tag::find()->all(), 'id', 'title');
+
+        return $this->render('tags', [
+            'selectedTags' => $selectedTags,
+            'tags' => $tags
         ]);
     }
 }

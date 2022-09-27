@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "article".
@@ -109,12 +110,43 @@ class Article extends \yii\db\ActiveRecord
         $category = Category::findOne($category_id); // выбираем категорию которую хотим привязать к этой модели
         // метод BaseActiveRecord::link() устанавливает связи между двумя разными видами данных
         if ($category !== null) {
-            // $this->category_id = $category->id;
-            // return $this->save(false);
+            $this->category_id = $category->id;
+            return $this->save(false);
             // но можно сделать проще методом link(), который означает связать:
-            $this->link('category', $category); // прописываем название связи 'category' (это как раз метод getCategory) и передаём модель с которой хотим связаться - $category
-
-            return true;
+            //$this->link('category', $category); // прописываем название связи 'category' (это как раз метод getCategory) и передаём модель с которой хотим связаться - $category
+            //return true;
         }
+    }
+
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getTags()
+    {
+        return $this->hasMany(Tag::class, ['id' => 'tag_id'])
+            ->viaTable('article_tag', ['article_id' => 'id']);
+    }
+
+    public function getSelectedTags()
+    {
+        $selectedTags = $this->getTags()->select('id')->asArray()->all();
+        return ArrayHelper::getColumn($selectedTags, 'id');
+    }
+
+    public function saveTags($tags)
+    {
+        if (is_array($tags)) {
+            $this->clearCurrentTags();
+
+            foreach ($tags as $tag_id) {
+                $tag = Tag::findOne($tag_id);
+                $this->link('tags', $tag);
+            }
+        }
+    }
+
+    public function clearCurrentTags()
+    {
+        ArticleTag::deleteAll(['article_id' => $this->id]);
     }
 }

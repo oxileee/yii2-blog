@@ -47,9 +47,11 @@ class Tag extends \yii\db\ActiveRecord
      * Gets query for [[ArticleTags]].
      *
      * @return \yii\db\ActiveQuery
+     * @throws \yii\base\InvalidConfigException
      */
-    public function getArticleTags()
+    public function getArticles()
     {
-        return $this->hasMany(ArticleTag::className(), ['tag_id' => 'id']);
+        return $this->hasMany(Article::class, ['id' => 'article_id'])
+            ->viaTable('article_tag', ['tag_id' => 'id']);
     }
 }
