@@ -1,6 +1,7 @@
 <?php
 use app\assets\PublicAsset;
 use yii\bootstrap4\Html;
+use yii\helpers\Url;
 
 /**
  * @var yii\web\View $this
@@ -33,16 +34,25 @@ PublicAsset::register($this);
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/"><img src="/public/images/logo.png" alt=""></a>
+                <a class="navbar-brand" href="/"><img src="/public/images/logo_oxile.png" alt=""></a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav text-uppercase">
-                    <li><a data-toggle="dropdown" class="dropdown-toggle" href="/">Home</a></li>
+                    <li><a href="/">Home</a></li>
                 </ul>
                 <div class="i_con">
                     <ul class="nav navbar-nav text-uppercase">
-                        <li><a href="/site/login">Login</a></li>
-                        <li><a href="/site/signup">Register</a></li>
+                        <?php if (Yii::$app->user->isGuest) : ?>
+                            <li><a href="<?= Url::toRoute(['auth/login'])?>">Login</a></li>
+                            <li><a href="<?= Url::toRoute(['auth/signup'])?>">Register</a></li>
+                        <?php else : ?>
+                            <?= Html::beginForm(['/auth/logout', 'post'])
+                            . Html::submitButton(
+                                'Logout (' . Yii::$app->user->identity->name . ')',
+                                ['class' => 'btn btn-link logout', 'style' => 'padding-top:10px;']
+                            )
+                            . Html::endForm() ?>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
