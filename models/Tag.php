@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\data\Pagination;
 use yii\db\ActiveQuery;
 
 /**
@@ -57,9 +58,30 @@ class Tag extends \yii\db\ActiveRecord
             ->viaTable('article_tag', ['tag_id' => 'id']);
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function getTitle()
     {
         return $this->hasOne(ArticleTag::class, ['id' => 'article_id'])
             ->viaTable('article_tag', ['tag_id' => 'id']);
+    }
+
+    public static function getArticlesByTag($id)
+    {
+        $query = Article::find()
+            ->innerJoin('article_tag', 'article.id = article_tag.article_id')
+            ->andWhere(['article_tag.tag_id' => $id]);
+
+        $countQuery = clone $query;
+        $pagination = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 6]);
+        $articles = $query->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->all();
+
+        return [
+            'articles' => $articles,
+            'pagination' => $pagination,
+        ];
     }
 }

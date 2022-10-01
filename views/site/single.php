@@ -30,7 +30,7 @@ use yii\helpers\Url;
                         </div>
                         <div class="decoration">
                             <?php foreach ($tags as $tag) : ?>
-                            <a href="#" class="btn btn-default"><?= $tag->title ?></a>
+                            <a href="<?= URL::toRoute(['site/tag', 'id' => $tag->id]) ?>" class="btn btn-default"><?= $tag->title ?></a>
                             <?php endforeach ?>
                         </div>
 
