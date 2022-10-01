@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\base\InvalidConfigException;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "tag".
@@ -46,12 +48,18 @@ class Tag extends \yii\db\ActiveRecord
     /**
      * Gets query for [[ArticleTags]].
      *
-     * @return \yii\db\ActiveQuery
-     * @throws \yii\base\InvalidConfigException
+     * @return ActiveQuery
+     * @throws InvalidConfigException
      */
     public function getArticles()
     {
         return $this->hasMany(Article::class, ['id' => 'article_id'])
+            ->viaTable('article_tag', ['tag_id' => 'id']);
+    }
+
+    public function getTitle()
+    {
+        return $this->hasOne(ArticleTag::class, ['id' => 'article_id'])
             ->viaTable('article_tag', ['tag_id' => 'id']);
     }
 }

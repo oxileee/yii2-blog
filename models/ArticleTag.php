@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "article_tag".
@@ -31,8 +32,8 @@ class ArticleTag extends \yii\db\ActiveRecord
     {
         return [
             [['article_id', 'tag_id'], 'integer'],
-            [['tag_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tag::className(), 'targetAttribute' => ['tag_id' => 'id']],
-            [['article_id'], 'exist', 'skipOnError' => true, 'targetClass' => Article::className(), 'targetAttribute' => ['article_id' => 'id']],
+            [['tag_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tag::class, 'targetAttribute' => ['tag_id' => 'id']],
+            [['article_id'], 'exist', 'skipOnError' => true, 'targetClass' => Article::class, 'targetAttribute' => ['article_id' => 'id']],
         ];
     }
 
@@ -51,7 +52,7 @@ class ArticleTag extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Article]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getArticle()
     {
@@ -61,7 +62,7 @@ class ArticleTag extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Tag]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTag()
     {

@@ -114,6 +114,9 @@ class Article extends \yii\db\ActiveRecord
             ->viaTable('article_tag', ['article_id' => 'id']);
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function getSelectedTags()
     {
         $selectedTags = $this->getTags()->select('id')->asArray()->all();
@@ -142,7 +145,7 @@ class Article extends \yii\db\ActiveRecord
      */
     public function getDate()
     {
-        return Yii::$app->formatter->asDate($this->date);
+        return (Yii::$app->formatter->asDate(($this->date !== '0000-00-00') ? $this->date : null));
     }
 
     public static function getAll($pageSize = 5)
