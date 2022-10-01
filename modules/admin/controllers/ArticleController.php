@@ -165,6 +165,9 @@ class ArticleController extends Controller
         return $this->render('image', ['model' => $model]);
     }
 
+    /**
+     * @throws NotFoundHttpException
+     */
     public function actionSetCategory($id)
     {
         $article = $this->findModel($id);
@@ -180,7 +183,7 @@ class ArticleController extends Controller
 
         return $this->render('category', [
             'article' => $article,
-            'selectedCategory' => $selectedCategoryId,
+            'selectedCategoryId' => $selectedCategoryId,
             'categories' => $categories
         ]);
     }
