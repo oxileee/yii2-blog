@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
@@ -17,7 +19,7 @@ use yii\web\IdentityInterface;
  *
  * @property Comment[] $comments
  */
-class User extends \yii\db\ActiveRecord implements IdentityInterface
+class User extends ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -56,16 +58,16 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * Gets query for [[Comments]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getComments()
     {
-        return $this->hasMany(Comment::className(), ['user_id' => 'id']);
+        return $this->hasMany(Comment::class, ['user_id' => 'id']);
     }
 
     public static function findIdentity($id)
     {
-        return User::findOne($id);
+        return self::findOne($id);
     }
 
     public static function findIdentityByAccessToken($token, $type = null)
@@ -90,11 +92,21 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
     public static function findByUsername($username)
     {
-        return User::find()->where(['name' => $username])->one();
+        return self::find()->where(['name' => $username])->one();
+    }
+
+    public static function findByEmail($email)
+    {
+        return self::find()->where(['email' => $email])->one();
     }
 
     public function validatePassword($password)
     {
         return $this->password === $password;
+    }
+
+    public function create()
+    {
+        return $this->save(false);
     }
 }
