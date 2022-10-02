@@ -8,10 +8,12 @@ use app\models\Category;
 use app\models\ImageUpload;
 use app\models\Tag;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -66,24 +68,17 @@ class ArticleController extends Controller
         ]);
     }
 
-
-   
-   
     /**
      * Creates a new Article model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return string|Response
      */
     public function actionCreate()
     {
         $model = new Article();
 
         if (Yii::$app->request->isPost) {
-           
-           
-           
-            if ($model->load($this->request->post()) && $model->save()) {
-               
+            if ($model->load($this->request->post()) && $model->saveArticle()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -99,14 +94,14 @@ class ArticleController extends Controller
      * Updates an existing Article model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
-     * @return string|\yii\web\Response
+     * @return string|Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->saveArticle()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -119,7 +114,7 @@ class ArticleController extends Controller
      * Deletes an existing Article model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
@@ -151,7 +146,7 @@ class ArticleController extends Controller
      */
     public function actionSetImage($id)
     {
-        $model = new ImageUpload;
+        $model = new ImageUpload();
 
         if ($this->request->isPost) {
             $article = $this->findModel($id);
@@ -189,7 +184,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * @throws NotFoundHttpException
+     * @throws NotFoundHttpException|InvalidConfigException
      */
     public function actionSetTags($id)
     {
