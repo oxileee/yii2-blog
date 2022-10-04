@@ -5,13 +5,13 @@ namespace app\controllers;
 use app\models\Article;
 use app\models\ArticleTag;
 use app\models\Category;
+use app\models\CommentForm;
 use app\models\Tag;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
 use app\models\ContactForm;
 
 class SiteController extends Controller
@@ -85,6 +85,8 @@ class SiteController extends Controller
         $popular = Article::getPopular();
         $recent = Article::getRecent();
         $categories = Category::getAll();
+        $comments = $article->getArticleComments();
+        $commentForm = new CommentForm();
 
         /** @var ArticleTag[] $tags */
         $tags = ($article !== null && !empty($article->tags)) ? $article->tags : [];
@@ -95,6 +97,8 @@ class SiteController extends Controller
             'recent' => $recent,
             'categories' => $categories,
             'tags' => $tags,
+            'comments' => $comments,
+            'commentForm' => $commentForm,
         ]);
     }
 
@@ -156,5 +160,19 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionComment($id)
+    {
+        $model = new CommentForm();
+
+        if (Yii::$app->request->isPost) {
+            $model->load(Yii::$app->request->post());
+
+            if ($model->saveComment($id)) {
+                Yii::$app->getSession()->setFlash('comment', 'Your comment will be added soon!');
+                return $this->redirect(['site/view', 'id' => $id]);
+            }
+        }
     }
 }

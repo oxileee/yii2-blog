@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\base\InvalidConfigException;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "comment".
@@ -21,6 +23,10 @@ class Comment extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
+    const STATUS_ALLOW = 1;
+    const STATUS_DISALLOW = 0;
+
     public static function tableName()
     {
         return 'comment';
@@ -34,8 +40,8 @@ class Comment extends \yii\db\ActiveRecord
         return [
             [['user_id', 'article_id', 'status'], 'integer'],
             [['text'], 'string', 'max' => 255],
-            [['article_id'], 'exist', 'skipOnError' => true, 'targetClass' => Article::className(), 'targetAttribute' => ['article_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['article_id'], 'exist', 'skipOnError' => true, 'targetClass' => Article::class, 'targetAttribute' => ['article_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -56,20 +62,45 @@ class Comment extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Article]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getArticle()
     {
-        return $this->hasOne(Article::className(), ['id' => 'article_id']);
+        return $this->hasOne(Article::class, ['id' => 'article_id']);
     }
 
     /**
      * Gets query for [[User]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function getDate()
+    {
+        return (Yii::$app->formatter->asDate(($this->date !== '0000-00-00') ? $this->date : null));
+    }
+
+    public function isAllowed()
+    {
+        return $this->status;
+    }
+
+    public function allow()
+    {
+        $this->status = self::STATUS_ALLOW;
+        return $this->save(false);
+    }
+
+    public function disallow()
+    {
+        $this->status = self::STATUS_DISALLOW;
+        return $this->save(false);
     }
 }

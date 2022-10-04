@@ -70,11 +70,6 @@ class User extends ActiveRecord implements IdentityInterface
         return self::findOne($id);
     }
 
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        // TODO: Implement findIdentityByAccessToken() method.
-    }
-
     public function getId()
     {
         return $this->id;
@@ -88,6 +83,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function validateAuthKey($authKey)
     {
         // TODO: Implement validateAuthKey() method.
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
     }
 
     public static function findByUsername($username)
@@ -108,5 +108,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function create()
     {
         return $this->save(false);
+    }
+
+    public function getImage()
+    {
+
+        return ($this->photo) ? '/uploads/' . $this->photo : '/public/images/no-photo.png';
     }
 }
