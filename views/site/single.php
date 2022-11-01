@@ -27,7 +27,9 @@ use yii\widgets\ActiveForm;
                     </div>
                     <div class="post-content">
                         <header class="entry-header text-center text-uppercase">
+                            <?php if ($article->category !== null) : ?>
                             <h6><a href="<?= Url::toRoute(['site/category', 'id' => $article->category->id]) ?>"><?= $article->category->title ?></a></h6>
+                            <?php endif ?>
                             <h1 class="entry-title"><a href="<?= Url::toRoute(['site/view', 'id' => $article->id]) ?>"><?= $article->title ?></a></h1>
                         </header>
                         <div class="entry-content">
@@ -39,7 +41,7 @@ use yii\widgets\ActiveForm;
                             <?php endforeach ?>
                         </div>
                         <div class="social-share">
-							<span class="social-share-title pull-left text-capitalize">By oxile On <?= $article->getDate() ?></span>
+                            <span class="social-share-title pull-left text-capitalize">By <a href="#"><?= $article->user->name ?></a> On <?= $article->getDate() ?></span>
                             <ul class="text-center pull-right">
                                 <li><a class="s-facebook" href="#"><i class="fa fa-facebook"></i></a></li>
                                 <li><a class="s-twitter" href="#"><i class="fa fa-twitter"></i></a></li>

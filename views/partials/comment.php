@@ -14,11 +14,11 @@ if (!empty($comments)) : ?>
     <?php foreach ($comments as $comment) : ?>
         <div class="bottom-comment"><!--bottom comment-->
             <div class="comment-img">
-                <img width="50" class="img-circle" src="<?= $comment->user->image ?>" alt="">
+                <a href="#"><img width="50" class="img-circle" src="<?= $comment->user->image ?>" alt=""></a>
             </div>
             <div class="comment-text">
                 <a href="#" class="replay btn pull-right">Цитировать</a>
-                <h5><?= $comment->user->name ?></h5>
+                <h5><a href="#"><?= $comment->user->name ?></a></h5>
                 <p class="comment-date"><?= $comment->getDate() ?></p>
                 <p class="para"><?= $comment->text ?></p>
             </div>

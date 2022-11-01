@@ -79,30 +79,34 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionView($id)
+    public function actionView($id): string
     {
-        $article = Article::findOne($id);
-        $popular = Article::getPopular();
-        $recent = Article::getRecent();
-        $categories = Category::getAll();
-        $comments = $article->getArticleComments();
-        $commentForm = new CommentForm();
+        if ($article = Article::findOne($id)) {
+            $popular = Article::getPopular();
+            $recent = Article::getRecent();
+            $categories = Category::getAll();
+            $comments = $article->getArticleComments();
+            $commentForm = new CommentForm();
 
-        /** @var ArticleTag[] $tags */
-        $tags = ($article !== null && !empty($article->tags)) ? $article->tags : [];
+            $article->viewedCounter();
 
-        return $this->render('single', [
-            'article' => $article,
-            'popular' => $popular,
-            'recent' => $recent,
-            'categories' => $categories,
-            'tags' => $tags,
-            'comments' => $comments,
-            'commentForm' => $commentForm,
-        ]);
+            /** @var ArticleTag[] $tags */
+            $tags = (!empty($article->tags)) ? $article->tags : [];
+
+            return $this->render('single', [
+                'article' => $article,
+                'popular' => $popular,
+                'recent' => $recent,
+                'categories' => $categories,
+                'tags' => $tags,
+                'comments' => $comments,
+                'commentForm' => $commentForm,
+            ]);
+        }
+        return $this->render('error');
     }
 
-    public function actionCategory($id)
+    public function actionCategory($id): string
     {
         $data = Category::getArticlesByCategory($id);
         $popular = Article::getPopular();
@@ -118,7 +122,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionTag($id)
+    public function actionTag($id): string
     {
         $data = Tag::getArticlesByTag($id);
         $popular = Article::getPopular();
@@ -152,12 +156,7 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
+    public function actionAbout(): string
     {
         return $this->render('about');
     }

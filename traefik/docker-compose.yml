@@ -1,0 +1,33 @@
+version: '3.8'
+ 
+networks:
+  proxy:
+    external: true
+  traefik:
+    external: true
+ 
+services:
+  traefik:
+    image: traefik:2.4
+    container_name: traefik
+    command:
+      - --api
+      - --api.insecure
+      - --api.dashboard
+      - --providers.docker
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik.rule=Host(`traefik.docker`)
+      - traefik.http.routers.traefik.entrypoints=web
+      - traefik.http.services.traefik.loadBalancer.server.port=8080
+      - traefik.docker.network=traefik
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy
+      - traefik
+    restart: always

@@ -11,11 +11,16 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+//    'timeZone' => 'UTC',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'GYknpz4W61eG9ClpjLHbcW56iMipMBpT',
         ],
+//        'formatter' => [
+//            'class' => 'yii\i18n\Formatter',
+//            'defaultTimeZone' => 'UTC',
+//        ],
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,

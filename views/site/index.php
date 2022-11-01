@@ -27,7 +27,9 @@ use yii\widgets\LinkPager;
                     </div>
                     <div class="post-content">
                         <header class="entry-header text-center text-uppercase">
+                            <?php if ($article->category !== null) : ?>
                             <h6><a href="<?= Url::toRoute(['site/category', 'id' => $article->category->id]) ?>"><?= $article->category->title ?></a></h6>
+                            <?php endif ?>
                             <h1 class="entry-title"><a href="<?= Url::toRoute(['site/view', 'id' => $article->id]) ?>"><?= $article->title ?></a></h1>
                         </header>
                         <div class="entry-content">
@@ -37,7 +39,7 @@ use yii\widgets\LinkPager;
                             </div>
                         </div>
                         <div class="social-share">
-                            <span class="social-share-title pull-left text-capitalize">By <a href="#">oxile</a> On <?= $article->getDate() ?></span>
+                            <span class="social-share-title pull-left text-capitalize">By <a href="#"><?= $article->user->name ?></a> On <?= $article->getDate() ?></span>
                             <ul class="text-center pull-right">
                                 <li><a class="fa" href="#"><i class="fa fa-eye"></i></a></li><?= (int) $article->viewed ?>
                             </ul>

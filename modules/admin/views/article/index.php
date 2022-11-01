@@ -14,26 +14,21 @@ $this->title = 'Articles';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="article-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Article', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <p><?= Html::a('Create Article', ['create'], ['class' => 'btn btn-success']) ?></p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'title',
             'description:ntext',
             'content:ntext',
-            'date',
+            [
+                'attribute' => 'date',
+                'format' => ['datetime', 'php:d.m.Y H:i:s']
+            ],
             [
                 'format' => 'html',
                 'label' => 'Image',
@@ -46,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'status',
             //'category_id',
             [
-                'class' => ActionColumn::className(),
+                'class' => ActionColumn::class,
                 'urlCreator' => function ($action, Article $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }

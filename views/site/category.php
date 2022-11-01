@@ -38,7 +38,7 @@ use yii\widgets\LinkPager;
                                     <?= $article->description ?>
                                 </div>
                                 <div class="social-share">
-                                    <span class="social-share-title pull-left text-capitalize">By oxile On <?= $article->getDate() ?></span>
+                                    <span class="social-share-title pull-left text-capitalize">By <a href="#"><?= $article->user->name ?></a> On <?= $article->getDate() ?></span>
                                 </div>
                             </div>
                         </div>

@@ -23,58 +23,54 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="d-flex flex-column h-100">
+<body>
 <?php $this->beginBody() ?>
-
-<header>
-    <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/admin/default/index']],
-            ['label' => 'Articles', 'url' => ['/admin/article/index']],
-            ['label' => 'Categories', 'url' => ['/admin/category/index']],
-            ['label' => 'Commentaries', 'url' => ['/admin/comment/index']],
-            ['label' => 'Tag', 'url' => ['/admin/tag/index']]
-        ],
-    ]);
-    NavBar::end();
-    ?>
-</header>
-
-<main role="main" class="flex-shrink-0">
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+    <div class="wrap">
+        <?php
+        NavBar::begin([
+            'brandLabel' => Yii::$app->name,
+            'brandUrl' => Yii::$app->homeUrl,
+            'options' => [
+                'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
+            ],
+        ]);
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav'],
+            'items' => [
+                ['label' => 'Home', 'url' => ['/admin/default/index']],
+                ['label' => 'Articles', 'url' => ['/admin/article/index']],
+                ['label' => 'Categories', 'url' => ['/admin/category/index']],
+                ['label' => 'Commentaries', 'url' => ['/admin/comment/index']],
+                ['label' => 'Tag', 'url' => ['/admin/tag/index']]
+            ],
+        ]);
+        NavBar::end();
+        ?>
+        <div class="container">
+            <?= Breadcrumbs::widget([
+                'links' => $this->params['breadcrumbs'] ?? [],
+            ]) ?>
+            <?= Alert::widget() ?>
+            <?= $content ?>
+        </div>
     </div>
-</main>
 
-<footer class="footer mt-auto py-3 text-muted">
-    <div class="container">
-        <p class="float-left">&copy; My Company <?= date('Y') ?></p>
-        <p class="float-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
+    <footer class="footer mt-auto py-3 text-muted">
+        <div class="container">
+            <p class="float-left">&copy; My Company <?= date('Y') ?></p>
+            <p class="float-right"><?= Yii::powered() ?></p>
+        </div>
+    </footer>
 
-<?php $this->endBody() ?>
-<?php $this->registerJsFile('/ckeditor/ckeditor.js') ?>
-<?php $this->registerJsFile('/ckfinder/ckfinder.js') ?>
-<script>
-    $(document).ready(function(){
-        var editor = CKEDITOR.replaceAll();
-        CKFINDER.setupCKEditor( editor );
-    })
-</script>
+    <?php $this->endBody() ?>
+    <?php $this->registerJsFile('/ckeditor/ckeditor.js') ?>
+    <?php $this->registerJsFile('/ckfinder/ckfinder.js') ?>
+    <script>
+        $(document).ready(function(){
+            const editor = CKEDITOR.replaceAll();
+            CKFinder.setupCKEditor( editor );
+        })
+    </script>
 </body>
 </html>
 <?php $this->endPage() ?>

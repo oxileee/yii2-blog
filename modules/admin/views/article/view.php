@@ -36,7 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'title',
             'description:ntext',
             'content:ntext',
-            'date',
+            [
+                'attribute' => 'date',
+                'format' => ['date', 'php:d.m.Y H:i:s'],
+            ],
             'image',
             'viewed',
             'user_id',

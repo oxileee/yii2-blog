@@ -14,7 +14,7 @@ class ArticleSearch extends Article
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             [['id', 'viewed', 'user_id', 'status', 'category_id'], 'integer'],
@@ -25,7 +25,7 @@ class ArticleSearch extends Article
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
+    public function scenarios(): array
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
@@ -38,7 +38,7 @@ class ArticleSearch extends Article
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search(array $params): ActiveDataProvider
     {
         $query = Article::find();
 

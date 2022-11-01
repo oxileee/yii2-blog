@@ -1,9 +1,66 @@
-version: '2'
+version: '3.3'
+
 services:
-  php:
-    image: yiisoftware/yii2-php:7.4-apache
-    volumes:
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      - ./:/app:delegated
-    ports:
-      - '8000:80'
+    nginx:
+        image: nginx:1.17-alpine
+        depends_on:
+            - php
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.blog.rule=Host(`blog.docker`)
+            - traefik.http.routers.blog.entrypoints=web
+            - traefik.docker.network=traefik
+        networks:
+            - bridge
+            - traefik
+        volumes:
+            - .:/var/www/blog
+            - .docker/nginx:/etc/nginx/conf.d:ro
+
+    php:
+        build:
+            context: .docker/php
+            args:
+                USER_NAME: "oxile"
+                USER_ID: 1000
+        user: "oxile"
+        extra_hosts:
+            - host.docker.internal:172.17.0.1
+        depends_on:
+            - db
+        environment:
+            - PHP_IDE_CONFIG=serverName=blog.docker
+        networks:
+            - bridge
+            - traefik
+        volumes:
+            - .:/var/www/blog
+            - .docker/php/php-fpm.d:/etc/php-fpm.d:ro
+            - .docker/php/php.d/0-default.ini:/etc/php.d/0-default.ini:ro
+            - .docker/php/php.d/15-xdebug.ini:/etc/php.d/15-xdebug.ini:ro
+            - .docker/php/php.d/10-tzone.ini:/etc/php.d/10-tzone.ini:ro
+
+    db:
+        image: mariadb:10.2
+        container_name: db
+        volumes:
+            - .docker/mysql/mysqld.cnf:/etc/my.cnf.d/mysqld.cnf
+            - .docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+            #- .docker/mysql/dump.sql:/docker-entrypoint-initdb.d/dump.sql:ro
+            - blog-db:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: "yii2-blog"
+            MYSQL_ROOT_PASSWORD: "123"
+        networks:
+            - bridge
+        ports:
+            - "3307:3306"
+
+networks:
+    traefik:
+        external: true
+    bridge:
+
+volumes:
+    blog-db:
+        external: true

@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 <div class="article-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    <?php // атрибут image - это и есть свойство $image в модели ImageUpload ?>
+
     <?= $form->field($model, 'image')->fileInput(['maxlength' => true]) ?>
 
     <div class="form-group">
