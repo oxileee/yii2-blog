@@ -145,6 +145,11 @@ header
 .main-menu .navbar-nav > li a:focus {
     color: #00BFF3;
 }
+.main-menu .navbar-nav li button:hover,
+.main-menu .navbar-nav li button:active,
+.main-menu .navbar-nav > li button:focus {
+    color: #00BFF3;
+}
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
     color: #00BFF3;
     background-color: transparent;
@@ -271,6 +276,17 @@ header
     letter-spacing: 1px;
 }
 
+.nav > li > form {
+    position: relative;
+    display: block;
+    padding: 15px 30px;
+}
+
+.nav > li > form > button {
+    letter-spacing: 1px;
+    font-size: 12px;
+    text-transform: uppercase;
+}
 /* ===============
 post css
  ===================*/

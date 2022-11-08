@@ -1,0 +1,12 @@
+parameters:
+    level: 5
+    excludePaths:
+        analyseAndScan:
+            - vendor/
+            - runtime/
+            - web/
+    bootstrapFiles:
+        - ./vendor/codeception/codeception/autoload.php
+        - ./vendor/autoload.php
+    scanFiles:
+        - ./vendor/yiisoft/yii2/BaseYii.php

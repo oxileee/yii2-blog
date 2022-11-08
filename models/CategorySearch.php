@@ -14,17 +14,6 @@ class CategorySearch extends Category
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
-        return [
-            [['id'], 'integer'],
-            [['title'], 'safe'],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
