@@ -48,6 +48,10 @@ class AuthController extends Controller
 
     public function actionSignup()
     {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = new SignupForm();
 
         if (Yii::$app->request->isPost) {

@@ -100,19 +100,18 @@ class User extends ActiveRecord implements IdentityInterface
         return self::find()->where(['email' => $email])->one();
     }
 
-    public function validatePassword($password)
+    public function validatePassword($password): bool
     {
         return $this->password === $password;
     }
 
-    public function create()
+    public function create(): bool
     {
         return $this->save(false);
     }
 
-    public function getImage()
+    public function getImage(): string
     {
-
         return ($this->photo) ? '/uploads/' . $this->photo : '/public/images/no-photo.png';
     }
 }

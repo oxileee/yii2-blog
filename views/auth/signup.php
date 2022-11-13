@@ -7,7 +7,7 @@
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 
-$this->title = 'Register';
+$this->title = 'Sign up';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="leave-comment mr-0">

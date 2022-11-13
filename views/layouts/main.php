@@ -44,7 +44,7 @@ PublicAsset::register($this);
                     <ul class="nav navbar-nav text-uppercase">
                         <?php if (Yii::$app->user->isGuest) : ?>
                             <li><a href="<?= Url::toRoute(['auth/login'])?>">Login</a></li>
-                            <li><a href="<?= Url::toRoute(['auth/signup'])?>">Register</a></li>
+                            <li><a href="<?= Url::toRoute(['auth/signup'])?>">Sign up</a></li>
                         <?php else : ?>
                             <?php if (Yii::$app->user->identity->isAdmin) : ?>
                             <li><a href="<?= Url::toRoute(['/admin'])?>">Admin panel</a></li>

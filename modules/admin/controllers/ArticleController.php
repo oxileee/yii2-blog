@@ -9,6 +9,7 @@ use app\models\ImageUpload;
 use app\models\Tag;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -26,17 +27,30 @@ class ArticleController extends Controller
      */
     public function behaviors(): array
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::class,
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'matchCallback' => function() {
+                            return Yii::$app->user->identity->isAdmin;
+                        },
+                        'roles' => ['@'],
+                    ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'index'  => ['GET'],
+                    'view'   => ['GET'],
+                    'create' => ['GET', 'POST'],
+                    'update' => ['GET', 'PUT', 'POST'],
+                    'delete' => ['POST', 'DELETE'],
                 ],
-            ]
-        );
+            ],
+        ];
     }
 
     /**
