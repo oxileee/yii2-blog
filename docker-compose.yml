@@ -30,6 +30,7 @@ services:
             - db
         environment:
             - PHP_IDE_CONFIG=serverName=blog.docker
+            - COMPOSER_CAFILE=/etc/pki/tls/cert.pem
         networks:
             - bridge
             - traefik

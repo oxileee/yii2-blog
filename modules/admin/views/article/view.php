@@ -39,7 +39,7 @@ YiiAsset::register($this);
             'content:ntext',
             [
                 'attribute' => 'date',
-                'format' => ['date', 'php:d.m.Y H:i:s'],
+                'format' => ['date', 'php:d.m.Y'],
             ],
             'image',
             'viewed',

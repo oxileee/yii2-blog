@@ -1,5 +1,6 @@
 <?php
 
+use yii\grid\SerialColumn;
 use app\models\Article;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -20,14 +21,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => SerialColumn::class],
             'id',
             'title',
             'description:ntext',
             'content:ntext',
             [
                 'attribute' => 'date',
-                'format' => ['datetime', 'php:d.m.Y H:i:s']
+                'format' => ['datetime', 'php:d.m.Y']
             ],
             [
                 'format' => 'html',
@@ -44,10 +45,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => ActionColumn::class,
                 'urlCreator' => function ($action, Article $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
+                }
+            ]
         ],
-    ]); ?>
+    ]) ?>
 
 
 </div>

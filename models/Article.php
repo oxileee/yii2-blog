@@ -25,7 +25,6 @@ use yii\helpers\ArrayHelper;
  * @property int|null $status
  * @property int|null $category_id
  *
- * @property ArticleTag[] $articleTags
  * @property Comment[] $comments
  */
 
@@ -78,7 +77,7 @@ class Article extends ActiveRecord
                 'attributes' => [
                     BaseActiveRecord::EVENT_BEFORE_INSERT => ['date'],
                 ],
-                'value' => date('Y-m-d H:i:s'),
+                'value' => date('Y-m-d'),
             ]
         ];
     }
@@ -94,7 +93,7 @@ class Article extends ActiveRecord
         return ($this->image) ? '/uploads/' . $this->image : '/no-image.jpg';
     }
 
-    public function deleteImage()
+    public function deleteImage(): void
     {
         $imageUploadModel = new ImageUpload();
         $imageUploadModel->deleteCurrentImage($this->image);
@@ -139,7 +138,7 @@ class Article extends ActiveRecord
         return ArrayHelper::getColumn($selectedTags, 'id');
     }
 
-    public function saveTags($tags)
+    public function saveTags($tags): void
     {
         if (is_array($tags)) {
             $this->clearCurrentTags();
@@ -151,7 +150,7 @@ class Article extends ActiveRecord
         }
     }
 
-    public function clearCurrentTags()
+    public function clearCurrentTags(): void
     {
         ArticleTag::deleteAll(['article_id' => $this->id]);
     }
@@ -204,7 +203,7 @@ class Article extends ActiveRecord
 
     public function viewedCounter(): bool
     {
-        $this->viewed += 1;
+        ++$this->viewed;
         return $this->save(false);
     }
 
